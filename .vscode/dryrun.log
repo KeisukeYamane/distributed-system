@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/yamane/Desktop/私用/golang/distributed-system'
+make: Leaving directory `/Users/yamane/Desktop/私用/golang/distributed-system'
+ 
+make: *** No targets.  Stop.
+
