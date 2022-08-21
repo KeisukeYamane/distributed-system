@@ -6,3 +6,6 @@ compile:
 
 test:
 	go test -race ./...
+
+doc:
+	godoc -http=localhost:6060
