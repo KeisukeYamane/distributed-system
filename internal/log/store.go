@@ -32,10 +32,9 @@ func newStore(f *os.File) (*store, error) {
 		return nil, err
 	}
 
-	size := uint64(fi.Size())
 	return &store{
 		File: f,
-		size: size, // 現在のファイルのサイズを保持することで、データを含むファイルからstoreを再生成することができる(ex: 再起動時など)
+		size: uint64(fi.Size()), // 現在のファイルのサイズを保持することで、データを含むファイルからstoreを再生成することができる(ex: 再起動時など)
 		buf:  bufio.NewWriter(f),
 	}, nil
 }
@@ -44,6 +43,7 @@ func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	// レコードを追加前にファイルのサイズを取得することで返り値をポシジョンとして使用できる
 	pos = s.size
 	// len(p)=5の場合、8byte分取るので[0 0 0 0 0 0 0 5]のスライス
 	// 上記の記述があることで、何バイト分読み出せば良いのかを把握することができる
@@ -74,6 +74,7 @@ func (s *store) ReadAt(p []byte, offset int64) (int, error) {
 	if err := s.buf.Flush(); err != nil {
 		return 0, err
 	}
+
 	// io.ReadAtインターフェイスを実装
 	return s.File.ReadAt(p, offset)
 }

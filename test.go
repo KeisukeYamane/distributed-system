@@ -11,6 +11,15 @@ import (
 	"sync"
 )
 
+type Record struct {
+	value uint64
+}
+
+type Log struct {
+	mu      sync.Mutex
+	records []Record
+}
+
 var (
 	// レコードサイズとインデックスエントリを永続化するためのエンコーディングを定義
 	enc = binary.BigEndian
