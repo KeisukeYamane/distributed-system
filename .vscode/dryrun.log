@@ -1,6 +1,8 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/yamane/Desktop/私用/golang/distributed-system'
+protoc api/v1/*.proto \
+		--go_out=. \
+		--go_opt=paths=source_relative \
+		--proto_path=.
 make: Leaving directory `/Users/yamane/Desktop/私用/golang/distributed-system'
  
-make: *** No targets.  Stop.
-

@@ -9,7 +9,7 @@ import (
 
 /*
 サービスを起動すると、サービスはログに追加される次のレコードに設定するオフセットを知る必要があります。
-サービスは、インデックスの最後のエントリを見て次のレコードのオフセットを知ることができ、それはファイルの最後の 12 バイトを読み出すだけの簡単な処理です。
+サービスは、インデックスの最後のエントリを見て次のレコードのオフセットを知ることができ、それはファイルの最後の12バイトを読み出すだけの簡単な処理です。
 しかし、メモリへマップするためにファイルを大きくすると、その処理が狂ってしまいます(最初にサイズを 変更する理由は、一度メモリにマップされたファイルはサイズを変更できないからです)。
 ファイルの最後に空領域を追加してファイルを大きくするので、最後のエントリはファイルの終わりではなく、最後のエントリとファイルの終わりの間には使われていない領域が存在することになります。
 その領域が残ってしまうと、サービスを正しく再起動できません。そのため、サービスを停止する際には、インデックスファイルを切り詰めて空領域を取り除き、最後のエントリを再びファイルの最後になるようにしています。
@@ -36,7 +36,14 @@ type index struct {
 	size uint64
 }
 
-// 指定されたファイルからindexを作成する
+// structの入れ子にすることでConfig.Segment.MaxindexBytesのようにアクセスが可能
+type Config struct {
+	Segment struct {
+		MaxIndexBytes uint64
+	}
+}
+
+// Config = 指定されたファイルからindexを作成する
 func newIndex(f *os.File, c Config) (*index, error) {
 	idx := &index{
 		file: f,
@@ -72,6 +79,11 @@ func newIndex(f *os.File, c Config) (*index, error) {
 	return idx, err
 }
 
+// インデックスのファイルパスを返す
+func (i *index) Name() string {
+	return i.file.Name()
+}
+
 func (i *index) Close() error {
 	/*
 	 メモリ領域に配置されたファイルの変更をデバイスにフラッシュする。
@@ -100,14 +112,49 @@ func (i *index) Close() error {
 	return i.file.Close()
 }
 
+// オフセットを受け取り、ストア内の関連したレコードの位置を返す
+// 0は常にインデックスの最初のエントリのオフセット、1は2番目のエントリと続く
 func (i *index) Read(in int64) (out uint32, pos uint64, err error) {
 	if i.size == 0 {
 		return 0, 0, io.EOF
 	}
-
-	// TODO: -1の状況ってどんな状況？負の値じゃなくて？
+	// -1指定されたら最後のエントリ番号を返す(-1自体にあまり意味はなさそう)
 	if in == -1 {
+		// outはエントリ
+		out = uint32((i.size / entWidth) - 1)
 	} else {
-
+		out = uint32(in)
 	}
+
+	// posは位置を表す、エントリ * 固定長で読み出す位置を把握することができる
+	pos = uint64(out) * entWidth
+	// posが最後らへんの場合、entWidth(固定長)が必ず存在しないといけないが、ファイルのサイズを超過する場合はエラーとする
+	if i.size < pos+entWidth {
+		return 0, 0, io.EOF
+	}
+
+	// エントリとその位置がわかったらメモリにマッピングされたファイルがどの位置にあるか返す
+	out = enc.Uint32(i.mmap[pos : pos+offWidth])          // レコードのオフセット pos=12, pos+offWidth=16 引くと4
+	pos = enc.Uint64(i.mmap[pos+offWidth : pos+entWidth]) // ストアファイル内の位置 pos+offWidth=16, pos+entWidth=24 引くと8
+
+	return out, pos, nil
+}
+
+func (i *index) Write(off uint32, pos uint64) error {
+	if i.isMaxed() {
+		return io.EOF
+	}
+
+	enc.PutUint32(i.mmap[i.size:i.size+offWidth], off)
+	enc.PutUint64(i.mmap[i.size+offWidth:i.size+entWidth], pos)
+	// 次の書き込みが行われる順番を保持する
+	i.size += uint64(entWidth)
+
+	return nil
+}
+
+// 書き込む領域があるかどうか確認する
+// TODO: 動かして内部の動きを確認すること
+func (i *index) isMaxed() bool {
+	return uint64(len(i.mmap)) < i.size+entWidth
 }
