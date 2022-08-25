@@ -36,13 +36,6 @@ type index struct {
 	size uint64
 }
 
-// structの入れ子にすることでConfig.Segment.MaxindexBytesのようにアクセスが可能
-type Config struct {
-	Segment struct {
-		MaxIndexBytes uint64
-	}
-}
-
 // Config = 指定されたファイルからindexを作成する
 func newIndex(f *os.File, c Config) (*index, error) {
 	idx := &index{
