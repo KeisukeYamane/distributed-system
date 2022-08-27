@@ -134,3 +134,47 @@ func (s *segment) Read(off uint64) (*api.Record, error) {
 
 	return record, err
 }
+
+/*
+セグメントが最大サイズに達したか、ストアまたはインデックスへの書き込みが一杯になったかどうかを判断して返す
+①もし長いレコードであれば、レコードが少しでもストアのバイト数の上限に達する
+②もし短いレコードでも多く書いていれば、インデックスのバイト数の上限に達する
+新たにセグメントを作成する必要があるかどうかこのメソッドを使用して判断する
+*/
+func (s *segment) IsMaxed() bool {
+	return s.store.size >= s.config.Segment.MaxStoreBytes ||
+		s.index.size >= s.config.Segment.MaxIndexBytes ||
+		s.index.isMaxed()
+}
+
+// セグメントを閉じて。インデックスファイルとストアファイルを削除する
+func (s *segment) Remove() error {
+	// インデックスファイルとストアファイルにフラッシュと同期をかける
+	if err := s.Close(); err != nil {
+		return err
+	}
+
+	// ファイルの削除
+	if err := os.Remove(s.index.Name()); err != nil {
+		return err
+	}
+
+	// ファイルの削除
+	if err := os.Remove(s.store.Name()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *segment) Close() error {
+	if err := s.index.Close(); err != nil {
+		return err
+	}
+
+	if err := s.store.Close(); err != nil {
+		return err
+	}
+
+	return nil
+}
