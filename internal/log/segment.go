@@ -68,7 +68,7 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 		s.nextOffset = baseOffset
 	} else {
 		/*
-		 インデックスに少なくとも1つのエントリがある場合、そのオフセットは
+		 インデックスに少なくとも1つのエントリがある場合、
 		 次に書き込まれるレコードのオフセットはセグメントの最後のオフセットを使う必要がある
 		 ベースのオフセットと相対オフセットの和に1を加算して取得可能
 		 TODO: 全体感が全くわからないので、なぜ加算するのか徹底的に調べること
