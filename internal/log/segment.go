@@ -89,11 +89,16 @@ func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 	cur := s.nextOffset
 	record.Offset = cur
 
-	// recordはレコードの実態そのもの 一度マーシャリングを行い、byte列に変換する
+	/*
+		recordはレコードの実態そのもの 一度マーシャリングを行い、byte列に変換する
+		value:"hello world" offset:16 先左がエンコーディングされる
+	*/
 	p, err := proto.Marshal(record)
 	if err != nil {
 		return 0, err
 	}
+
+	fmt.Println(len(p))
 
 	// posにはマーシャリングされたレコードを読み出す位置が格納されている(= 何もレコードがない時はもちろんposは0になる)
 	_, pos, err := s.store.Append(p)
