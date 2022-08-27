@@ -3,7 +3,7 @@ syntax = "proto3";
 // Goコードのパッケージとして使用される
 package log.v1;
 
-option go_package = "github.com/yamane/api/log_v1";
+option go_package = "github.com/KeisukeYamane/api/log_v1";
 
 // スライスを定義したい場合はrepeatedキーワードを使用する
 // (protoBuf) repeated Record records = (Go) records []Record

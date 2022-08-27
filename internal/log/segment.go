@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	api "github.com/KeisukeYamane/proglog/api/v1"
+	"google.golang.org/protobuf/proto"
 )
 
 /*
@@ -12,6 +15,8 @@ import (
 インデックスに新たなエントリを追加する必要がある(エントリはインデックスの中身、インデックスの中にエントリが複数存在するイメージ)
 同様に読み取りの場合、セグメントはインデックスからエントリを検索し、ストアからデータを取り出す必要がある
 (ストアとインデックスの協調が必要)
+
+基本、インデックスはストアの付加情報になるのでストアへの操作の次にインデックスへの操作が行われることが多い
 */
 type segment struct {
 	/*
@@ -77,4 +82,33 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 	}
 
 	return s, nil
+}
+
+// セグメントにレコードを書き込む
+func (s *segment) Append(record *api.Record) (offset uint64, err error) {
+	cur := s.nextOffset
+	record.Offset = cur
+
+	// recordはレコードの実態そのもの 一度マーシャリングを行い、byte列に変換する
+	p, err := proto.Marshal(record)
+	if err != nil {
+		return 0, err
+	}
+
+	// posにはマーシャリングされたレコードを読み出す位置が格納されている(= 何もレコードがない時はもちろんposは0になる)
+	_, pos, err := s.store.Append(p)
+	if err != nil {
+		return 0, err
+	}
+
+	if err = s.index.Write(
+		// インデックスのオフセットは、ベースのオフセットからの相対 (全然わからん)
+		uint32(s.nextOffset-uint64(s.baseOffset)),
+		pos,
+	); err != nil {
+		return 0, err
+	}
+	s.nextOffset++ // increment 将来のAppendメソッドの呼び出しに備える
+
+	return cur, nil
 }

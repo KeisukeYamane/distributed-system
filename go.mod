@@ -1,4 +1,4 @@
-module github.com/yamane/proglog
+module github.com/KeisukeYamane/proglog
 
 go 1.17
 
