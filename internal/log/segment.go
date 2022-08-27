@@ -84,7 +84,7 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 	return s, nil
 }
 
-// セグメントにレコードを書き込む
+// セグメントにレコードを書き込む store->indexの順に書き込む
 func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 	cur := s.nextOffset
 	record.Offset = cur
@@ -111,4 +111,26 @@ func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 	s.nextOffset++ // increment 将来のAppendメソッドの呼び出しに備える
 
 	return cur, nil
+}
+
+// セグメントからレコードを読み出す index->storeの順に読み出す
+func (s *segment) Read(off uint64) (*api.Record, error) {
+	/*
+		絶対オフセットを相対オフセットに変換し、関連するインデックスエントリの内容を取得する
+		posはstoreファイル内の位置が保持されているので、それを使用しstoreファイル内のレコードを取得できる
+	*/
+	_, pos, err := s.index.Read(int64(off - s.baseOffset))
+	if err != nil {
+		return nil, err
+	}
+
+	p, err := s.store.Read(pos)
+	if err != nil {
+		return nil, err
+	}
+
+	record := &api.Record{}
+	err = proto.Unmarshal(p, record)
+
+	return record, err
 }

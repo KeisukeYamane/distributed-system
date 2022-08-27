@@ -108,6 +108,7 @@ func (i *index) Close() error {
 // オフセットを受け取り、ストア内の関連したレコードの位置を返す
 // 0は常にインデックスの最初のエントリのオフセット、1は2番目のエントリと続く
 func (i *index) Read(in int64) (out uint32, pos uint64, err error) {
+	// indexファイルに何も書き込みがなかった場合
 	if i.size == 0 {
 		return 0, 0, io.EOF
 	}
