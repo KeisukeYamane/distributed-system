@@ -76,7 +76,6 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 		 インデックスに少なくとも1つのエントリがある場合、
 		 次に書き込まれるレコードのオフセットはセグメントの最後のオフセットを使う必要がある
 		 ベースのオフセットと相対オフセットの和に1を加算して取得可能
-		 TODO: 全体感が全くわからないので、なぜ加算するのか徹底的に調べること
 		*/
 		s.nextOffset = baseOffset + uint64(off) + 1
 	}
@@ -150,7 +149,7 @@ func (s *segment) IsMaxed() bool {
 		s.index.isMaxed()
 }
 
-// セグメントを閉じて。インデックスファイルとストアファイルを削除する
+// セグメントを閉じて、インデックスファイルとストアファイルを削除する
 func (s *segment) Remove() error {
 	// インデックスファイルとストアファイルにフラッシュと同期をかける
 	if err := s.Close(); err != nil {

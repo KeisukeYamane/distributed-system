@@ -1,11 +1,13 @@
 package log
 
 import (
+	"io"
 	"os"
 	"testing"
 
 	api "github.com/KeisukeYamane/proglog/api/v1"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 const initialBaseOffset = 16
@@ -37,4 +39,33 @@ func TestSegment(t *testing.T) {
 		// 取得できる内容はいつも同じ
 		require.Equal(t, want.Value, got.Value)
 	}
+
+	_, err = s.Append(want)
+	// 4回目の実行はc.Segment.MaxIndexBytesを超過するためerr
+	require.Equal(t, io.EOF, err)
+
+	// この時点ではインデックスの容量は最大になっている
+	require.True(t, s.IsMaxed())
+	require.NoError(t, s.Close())
+
+	p, _ := proto.Marshal(want)
+	// len(p) = 書き込むバイト長と固定長(なんbyte書き込まれているか)を足して *4することでstoreが現時点で最大になる
+	c.Segment.MaxStoreBytes = uint64(len(p)+lenWidth) * 4
+	// インデックスの容量を増やす
+	c.Segment.InitialOffset = 1024
+
+	s, err = newSegment(dir, initialBaseOffset, c)
+	require.NoError(t, err)
+	// ストアが最大なのでエラーになる
+	require.True(t, s.IsMaxed())
+
+	// removeして各ファイルを削除する
+	require.NoError(t, s.Remove())
+	// 永続化されたインデックスとストアのファイルからセグメントの状態を読み出すことを確認
+	s, err = newSegment(dir, initialBaseOffset, c)
+	require.NoError(t, err)
+	// 新たにセグメントを作成したので上限にはもちろん達していない
+	require.False(t, s.IsMaxed())
+	require.NoError(t, s.Close())
+
 }
