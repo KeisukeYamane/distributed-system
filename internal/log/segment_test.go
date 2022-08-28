@@ -47,6 +47,7 @@ func TestSegment(t *testing.T) {
 	fmt.Println("s.baseOffset", s.baseOffset)
 	fmt.Println("s.nextOffset", s.nextOffset)
 	fmt.Println("s.index.size", s.index.size)
+	fmt.Println("len(s.index.mmap)", len(s.index.mmap))
 	fmt.Println("s.store.size", s.store.size)
 	// for i := uint64(0); i < 3; i++ {
 	// 	off, err := s.Append(want)

@@ -63,6 +63,7 @@ func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 	w += lenWidth
 	// 現在のファイルサイズに追加分のバイト数 + 固定のバイト数を足した値をいれる
 	s.size += uint64(w)
+
 	// 追加バイト数とそのバイトを読み出す際のポジションを返す
 	return uint64(w), pos, nil
 }
