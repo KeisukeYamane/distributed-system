@@ -98,8 +98,6 @@ func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 		return 0, err
 	}
 
-	fmt.Println(len(p))
-
 	// posにはマーシャリングされたレコードを読み出す位置が格納されている(= 何もレコードがない時はもちろんposは0になる)
 	_, pos, err := s.store.Append(p)
 	if err != nil {

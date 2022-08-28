@@ -1,7 +1,6 @@
 package log
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -27,36 +26,15 @@ func TestSegment(t *testing.T) {
 	require.Equal(t, uint64(initialBaseOffset), s.nextOffset)
 	require.False(t, s.IsMaxed())
 
-	/*
-		2回実行した時のメモ
-		s.Append(want).off 16
-		s.baseOffset       16
-		s.nextOffset       17
-		s.index.size       12
-		s.store.size       23
+	for i := uint64(0); i < 3; i++ {
+		off, err := s.Append(want)
+		require.NoError(t, err)
+		require.Equal(t, initialBaseOffset+i, off)
 
-		s.Append(want).off 17
-		s.baseOffset       16
-		s.nextOffset       18
-		s.index.size       24
-		s.store.size       46
-	*/
-
-	off, err := s.Append(want)
-	fmt.Println("off", off)
-	fmt.Println("s.baseOffset", s.baseOffset)
-	fmt.Println("s.nextOffset", s.nextOffset)
-	fmt.Println("s.index.size", s.index.size)
-	fmt.Println("len(s.index.mmap)", len(s.index.mmap))
-	fmt.Println("s.store.size", s.store.size)
-	// for i := uint64(0); i < 3; i++ {
-	// 	off, err := s.Append(want)
-	// }
-
-	off, err = s.Append(want)
-	fmt.Println("off", off)
-	fmt.Println("s.baseOffset", s.baseOffset)
-	fmt.Println("s.nextOffset", s.nextOffset)
-	fmt.Println("s.index.size", s.index.size)
-	fmt.Println("s.store.size", s.store.size)
+		// 同じ内容を何度もfor文で書き込む
+		got, err := s.Read(off)
+		require.NoError(t, err)
+		// 取得できる内容はいつも同じ
+		require.Equal(t, want.Value, got.Value)
+	}
 }
