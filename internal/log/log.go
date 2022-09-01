@@ -62,30 +62,30 @@ func (l *Log) setUp() error {
 		// 文字列を十進数のint型に変換 ex: strconv.ParseUint(offStr, 10, 64) -> 十進数のint64型に変換
 		off, _ := strconv.ParseUint(offStr, 10, 0)
 		baseOffsets = append(baseOffsets, off)
+	}
 
-		// offsetが大きい順に並べ替える
-		sort.Slice(baseOffsets, func(i, j int) bool {
-			return baseOffsets[i] < baseOffsets[j]
-		})
+	// offsetが大きい順に並べ替える
+	sort.Slice(baseOffsets, func(i, j int) bool {
+		return baseOffsets[i] < baseOffsets[j]
+	})
 
-		// len(baseOffsets) = dir内のファイル数になる
-		for i := 0; i < len(baseOffsets); i++ {
-			if err = l.newSegment(baseOffsets[i]); err != nil {
-				return err
-			}
-
-			// baseOffsetsは、インデックスとストアの2つの重複を含んでいるので、重複しているものはスキップする
-			// TODO: ?? 意味がわからない
-			i++
+	// len(baseOffsets) = dir内のファイル数になる
+	for i := 0; i < len(baseOffsets); i++ {
+		if err = l.newSegment(baseOffsets[i]); err != nil {
+			return err
 		}
 
-		// segmentが全くない場合
-		if l.segments == nil {
-			if err = l.newSegment(
-				l.Config.Segment.InitialOffset,
-			); err != nil {
-				return err
-			}
+		// baseOffsetsは、インデックスとストアの2つの重複を含んでいるので、重複しているものはスキップする
+		// TODO: ?? 意味がわからない
+		i++
+	}
+
+	// segmentが全くない場合
+	if l.segments == nil {
+		if err = l.newSegment(
+			l.Config.Segment.InitialOffset,
+		); err != nil {
+			return err
 		}
 	}
 
@@ -114,7 +114,7 @@ func (l *Log) Append(record *api.Record) (uint64, error) {
 	// 再度同じメソッドを実行する
 	off, err := l.activeSegment.Append(record)
 	if err != nil {
-		return off, err
+		return 0, err
 	}
 
 	return off, err
