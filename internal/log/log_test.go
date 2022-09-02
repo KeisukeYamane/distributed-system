@@ -1,11 +1,13 @@
 package log
 
 import (
+	"io"
 	"os"
 	"testing"
 
 	api "github.com/KeisukeYamane/proglog/api/v1"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestLog(t *testing.T) {
@@ -14,8 +16,8 @@ func TestLog(t *testing.T) {
 		"append and read a record succeeds": testAppendRead,
 		"offset out of range error":         testOutOfRangeErr,
 		"init with existing segments":       testInitExisting,
-		// "reader":                            testReader,
-		// "truncate":                          testTruncate,
+		"reader":                            testReader,
+		"truncate":                          testTruncate,
 	} {
 		// 新たにログを作成せずテストすることが可能になる
 		t.Run(scenario, func(t *testing.T) {
@@ -97,10 +99,40 @@ func testInitExisting(t *testing.T, o *Log) {
 	require.Equal(t, uint64(2), off)
 }
 
-// func testReader(t *testing.T, log *Log) {
+// ログのスナップショットを作成したり、ログを復元できたりするように、ディスクに保存されているログを読み込めるかテスト
+func testReader(t *testing.T, log *Log) {
+	append := &api.Record{
+		Value: []byte("hello world"),
+	}
+	off, err := log.Append(append)
+	require.NoError(t, err)
+	require.Equal(t, uint64(0), off)
 
-// }
+	reader := log.Reader()
+	b, err := io.ReadAll(reader) // func io.ReadAll(r io.Reader) ([]byte, error)
+	require.NoError(t, err)
 
-// func testTruncate(t *testing.T, log *Log) {
+	read := &api.Record{}
+	err = proto.Unmarshal(b[lenWidth:], read) // TODO:Unmarshalってどんな引数をうめこめばよかったっけ？
+	require.NoError(t, err)
+	require.Equal(t, append.Value, read.Value)
+	require.NoError(t, log.Close())
+}
 
-// }
+func testTruncate(t *testing.T, log *Log) {
+	append := &api.Record{
+		Value: []byte("hello world"),
+	}
+
+	for i := 0; i < 3; i++ {
+		_, err := log.Append(append)
+		require.NoError(t, err)
+	}
+
+	err := log.Truncate(1)
+	require.NoError(t, err)
+
+	_, err = log.Read(0)
+	require.Error(t, err)
+	require.NoError(t, log.Close())
+}
