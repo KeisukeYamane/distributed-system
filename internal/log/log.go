@@ -103,15 +103,18 @@ func (l *Log) Append(record *api.Record) (uint64, error) {
 		return 0, err
 	}
 
+	fmt.Println("highestOffset", highestOffset)
+	fmt.Println("l.activeSegment", l.activeSegment)
+	fmt.Println("l.activeSegment.IsMaxed", l.activeSegment.IsMaxed())
 	// アクティブセグメントの容量がいっぱいでログが追加できない場合
 	if l.activeSegment.IsMaxed() {
-		err = l.newSegment(highestOffset + 1) // 最後+1で新たにセグメントを作成
+		// newSegmentを実行すると作成されたセグメントが新たなアクティブセグメントになる
+		err = l.newSegment(highestOffset + 1) // 最後+1で新たにセグメントを作成 引数がsegmentのbaseOffsetになる
 		if err != nil {
 			return 0, err
 		}
 	}
 
-	// 再度同じメソッドを実行する
 	off, err := l.activeSegment.Append(record)
 	if err != nil {
 		return 0, err
@@ -121,11 +124,27 @@ func (l *Log) Append(record *api.Record) (uint64, error) {
 }
 
 /*
+segmentのnewSegmentを実行するヘルパメソッド
+新たに作成されたセグメントをsegmentsスライスに追加し
+その作成したセグメントをアクティブセグメントとする
+*/
+func (l *Log) newSegment(off uint64) error {
+	s, err := newSegment(l.Dir, off, l.Config)
+	if err != nil {
+		return err
+	}
+
+	l.segments = append(l.segments, s)
+	l.activeSegment = s
+
+	return nil
+}
+
+/*
 LowestOffset()とHighestOffset()を使用することで、ログに保存されているオフセット範囲を取得できる
 レプリケーションを行う連携型クラスタのサポートに取り組む際に、どのノードが最も古いデータと
 最新のデータを持っているのか、ログに保存されているオフセットの範囲が重要な情報になる
 */
-
 // l.segments[0]を取るってことは、古い順にセグメントが並んでいることが前提になったコード？？
 func (l *Log) LowestOffset() (uint64, error) {
 	l.mu.RLock()
@@ -199,26 +218,11 @@ func (o *originReder) Read(p []byte) (int, error) {
 	return n, err
 }
 
-/*
-segmentのnewSegmentを実行するヘルパメソッド
-新たに作成されたセグメントをsegmentsスライスに追加し
-その作成したセグメントをアクティブセグメントとする
-*/
-func (l *Log) newSegment(off uint64) error {
-	s, err := newSegment(l.Dir, off, l.Config)
-	if err != nil {
-		return err
-	}
-
-	l.segments = append(l.segments, s)
-	l.activeSegment = s
-
-	return nil
-}
-
+// セグメントの中の最大オフセットを取得する
 func (l *Log) highestOffset() (uint64, error) {
 	// TODO: -1をなぜするのか徹底的に調べること
 	off := l.segments[len(l.segments)-1].nextOffset
+
 	if off == 0 {
 		return 0, nil
 	}

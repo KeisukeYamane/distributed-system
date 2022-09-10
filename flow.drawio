@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="VaeLvAhHS9jMmolEGU3U" name="Page-1">
-        <mxGraphModel dx="797" dy="1533" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="449" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -115,13 +115,13 @@
                 <mxCell id="36" value="具体的な実装内容" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="444" y="710" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="37" value="segment構造体&lt;br&gt;baseOssset: 16(固定)&lt;br&gt;nextOffset: 16(baseOffsetと同じ)" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                <mxCell id="37" value="segment構造体&lt;br&gt;baseOffset: 16(固定)&lt;br&gt;nextOffset: 16(baseOffsetと同じ)" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="98.25" y="870" width="180" height="180" as="geometry"/>
                 </mxCell>
                 <mxCell id="38" value="store構造体&lt;br&gt;size: 0" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="568.25" y="896" width="160" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="index構造体&lt;br&gt;size: 0&lt;br&gt;mmap: 36 entWidth * 3" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                <mxCell id="40" value="index構造体&lt;br&gt;size: 0&lt;br&gt;mmap: 36 (entWidth * 3)" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="348.25" y="896" width="160" height="160" as="geometry"/>
                 </mxCell>
                 <mxCell id="41" value="segment構造体作成時" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
@@ -139,7 +139,7 @@
                 <mxCell id="48" value="追加するrecord構造体&lt;br&gt;valueの値ではなく、構造体をそのままつっこむ" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="173" y="1765" width="150" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="49" value="segment構造体&lt;br&gt;baseOssset: 16(固定)&lt;br&gt;nextOffset: 17(処理終了後にnextOffset + 1)&lt;br&gt;&lt;br&gt;返り値&lt;br&gt;off = current nextOffset = 16&lt;br&gt;-&amp;gt; 次回取得時は+ 1" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                <mxCell id="49" value="segment構造体&lt;br&gt;baseOffset: 16(固定)&lt;br&gt;nextOffset: 17(処理終了後にnextOffset + 1)&lt;br&gt;&lt;br&gt;返り値&lt;br&gt;off = current nextOffset = 16&lt;br&gt;-&amp;gt; 次回取得時は+ 1" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="133" y="1335" width="190" height="190" as="geometry"/>
                 </mxCell>
                 <mxCell id="50" value="store構造体&lt;br&gt;size: 23&lt;br&gt;内部: 書き込まれるレコードのバイト数を8byte分確保した上で追加し実際のレコードを追加(15byte)" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
@@ -264,7 +264,7 @@
                         <mxPoint x="419.9980000000001" y="1888.5499999999997" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="96" value="segment構造体&lt;br&gt;baseOssset: 16(固定)&lt;br&gt;nextOffset: 18&lt;br&gt;&lt;br&gt;返り値&lt;br&gt;off = current nextOffset = 17&lt;br&gt;-&amp;gt; 次回取得時は+ 1" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+                <mxCell id="96" value="segment構造体&lt;br&gt;baseOffset: 16(固定)&lt;br&gt;nextOffset: 18&lt;br&gt;&lt;br&gt;返り値&lt;br&gt;off = current nextOffset = 17&lt;br&gt;-&amp;gt; 次回取得時は+ 1" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="920" y="2057" width="190" height="190" as="geometry"/>
                 </mxCell>
                 <mxCell id="97" value="store構造体&lt;br&gt;size: 46&lt;br&gt;posから8byte分取得し、読み取るレコードのbyte数を取得&lt;br&gt;そのbyte数で読み出し、デコードする" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
@@ -342,12 +342,155 @@
         </mxGraphModel>
     </diagram>
     <diagram id="6IuTHcorMyGQRcgi9W77" name="Page-2">
-        <mxGraphModel dx="-30" dy="364" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="153" dy="87" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="ApotxhABHW0B6uMRuJWH-0"/>
                 <mxCell id="ApotxhABHW0B6uMRuJWH-1" parent="ApotxhABHW0B6uMRuJWH-0"/>
-                <mxCell id="ApotxhABHW0B6uMRuJWH-2" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://storage.googleapis.com/zenn-user-upload/ea5a1014815e463d9e643e6d.png;" vertex="1" parent="ApotxhABHW0B6uMRuJWH-1">
+                <mxCell id="ApotxhABHW0B6uMRuJWH-2" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://storage.googleapis.com/zenn-user-upload/ea5a1014815e463d9e643e6d.png;" parent="ApotxhABHW0B6uMRuJWH-1" vertex="1">
                     <mxGeometry x="920" y="1240.73" width="1205.53" height="679.27" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="-Yuxas4KLtgXRev6Q3kl" name="Page-3">
+        <mxGraphModel dx="1276" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-0"/>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-1" parent="a6Zbn8eVY7nvMM-QkmC9-0"/>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-4" value="storeの最大バイトを32にする" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-125" y="322" width="180" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-5" value="NewLogを実行する" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-65" y="382" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-6" value="storeのマックスバイトを1024にするが、すでに設定してあるのでしない&lt;br&gt;indexのマックスバイトを1024バイトに設定" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-225" y="472" width="400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-7" value="l.setUp()を実行&lt;br&gt;ディレクトリ内のファイルを全て取得する&lt;br&gt;拡張子を除いて、ファイル名をuinit64に変換し、それをbaseOffsetとして配列に詰める&lt;br&gt;配列に詰めたuinit64をソートし、小→大で並べる&lt;br&gt;配列の要素数を最大としfor文で回し、newSegmentメソッドを実行する&lt;br&gt;&lt;div style=&quot;color: rgb(212 , 212 , 212) ; background-color: rgb(30 , 30 , 30) ; font-family: &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace ; line-height: 18px&quot;&gt; l.&lt;span style=&quot;color: #dcdcaa&quot;&gt;newSegment&lt;/span&gt;(baseOffsets[i]) // l.newSegment(0),&amp;nbsp;&lt;/div&gt;&lt;span style=&quot;color: rgb(212 , 212 , 212) ; font-family: &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace ; background-color: rgb(30 , 30 , 30)&quot;&gt;l.newSegment(2) 1飛ばし,&lt;br&gt;segmentがない場合は新たにセグメントを作成する&lt;br&gt;&lt;br&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-255" y="532" width="480" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-9" value="segment" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="490" y="190" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6Zbn8eVY7nvMM-QkmC9-10" value="log" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-65" y="202" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="H2MC7YfqRKFaAsnYkY9X-0" value="" style="endArrow=classic;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="245" y="818" as="sourcePoint"/>
+                        <mxPoint x="345" y="818" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="H2MC7YfqRKFaAsnYkY9X-1" value="baseOffSetが0, 2, 4という1飛ばしで実行&lt;br&gt;結果をactiveSegmentにし、segments配列に詰める&lt;br&gt;複数segemntがある場合は何度もforが実行されることで、activeSegmentは塗り変わる" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-250" y="687" width="480" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-0" value="baseOffSet = 4を渡した場合" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="245" y="773" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-1" value="4.store, 4.indexファイルを開く" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="414" y="803" width="180" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-3" value="store" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="800" y="190" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-4" value="index" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="1010" y="190" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-5" value="" style="endArrow=classic;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="650" y="812.5" as="sourcePoint"/>
+                        <mxPoint x="740" y="812.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-6" value="4.storeのファイルサイズを&lt;br&gt;構造体に格納" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="770" y="801" width="160" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-7" value="4.indexのファイルサイズを&lt;br&gt;構造体に格納し、予め設定&lt;br&gt;されたMax byteまで拡張する&lt;br&gt;ファイルの内容をメモリに置く(mmap)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="965" y="786" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-9" value="" style="endArrow=classic;html=1;startArrow=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" source="bFYJgTVllD8NjW84qetz-10" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="740" y="935.5" as="sourcePoint"/>
+                        <mxPoint x="650" y="935.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bFYJgTVllD8NjW84qetz-10" value="indexファイルの末尾を読み出し中身が何もない時、&lt;br&gt;nextOffSetをbaseOffsetにする&lt;br&gt;ある場合はセグメントの最後のオフセットをnextOffsetに設定する&lt;br&gt;ためbaseOffset + uinit64(0) +1を実行&lt;br&gt;baseOffset = 既存のセグメントの個数(indexにmax2回書き込み、6回書き込んでいたら&lt;br&gt;baseOffset = 3&lt;br&gt;uint64(0) = baseOffsetを除いて何回書き込んでいるか。&lt;br&gt;そしてその次が欲しいので+1する)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="235" y="876" width="480" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="sWEHb1eJT83oS5SMsiW2-0" value="" style="endArrow=none;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" target="bFYJgTVllD8NjW84qetz-10" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="740" y="935.5" as="sourcePoint"/>
+                        <mxPoint x="650" y="935.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="sWEHb1eJT83oS5SMsiW2-1" value="NowLogが実行されたタイミングで&lt;br&gt;baseOffset = index 1ファイル全てに書き込んだ総量&lt;br&gt;nextOffset = 次に書き込むポジションになる&lt;br&gt;つまり、indexに2回書き込むことができ5回書き込んだ場合は&lt;br&gt;baseOffset = 4, nextOffset = 6となる&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-190" y="760" width="350" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="sWEHb1eJT83oS5SMsiW2-2" value="logを追加する&lt;br&gt;(全セグメント数 -1)のnextOffset&lt;br&gt;を-1して返す。&lt;br&gt;現在のセグメントがアクティブな時、次に作成する&lt;br&gt;segemntは上の値を+1したものになる&lt;br&gt;例えば、7回目の書き込みの場合&lt;br&gt;セグメントはbaseOffsetが0,2,4で作成され、4つ目のセグメントのnextOffsetは7である。&lt;br&gt;なのでhighestOffsetは5となり、容量はいっぱいなので&lt;br&gt;次に作成するセグメントは5 + 1で6で作成する&lt;br&gt;新たに作成されたセグメントは次のアクティブセグメントとなる&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-255" y="965" width="490" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-185" y="1200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-50" y="1200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-4" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="80" y="1200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-185" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-6" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-125" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="-50" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-8" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="10" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-9" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="80" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gZPDgnhd0i4VMeqdRldM-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="a6Zbn8eVY7nvMM-QkmC9-1" vertex="1">
+                    <mxGeometry x="140" y="1280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--0" value="ex segment&lt;br&gt;(baseOffset = 4&lt;br&gt;&amp;nbsp;4.segmentというファイルからbaseoffsetを取得)&lt;br&gt;4.indeの中身が何もなければ、nextOffset = baseOffset&lt;br&gt;あれば、position(1回目なら0、2回目なら1)&lt;br&gt;を足して&lt;br&gt;さらに+1したものがnextoffsetになる" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="290" y="1900" width="190" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--1" value="4.store&lt;br&gt;-&amp;gt; ファイルサイズを格納" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="90" y="1880" width="150" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--2" value="4.index&lt;br&gt;-&amp;gt; 中身を確認" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="90" y="1990" width="150" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--3" value="setUp" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="235" y="1700" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--4" value="書き込み" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="230" y="2130" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--5" value="Log構造体が保持する各セグメントからの最後のセグメントを取得し、そのnextOffsetを取得、し-1する&lt;br&gt;現在のactiveSegmentがmaxの場合、新たにセグメントを作成することで、それが新たしいactiveSgmentに設定される" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="75" y="2170" width="195" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--7" value="書き込む内容をマーシャリングし、storeに書き込む&lt;br&gt;storeは書き込む前の、ファイルサイズを返す" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="316" y="2180" width="195" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--8" value="indexでは、nextOffset -&amp;nbsp; baseoffsetをエントリとし、storeから受け取ったファイルサイズを書き込む&lt;br&gt;-&amp;gt; エントリを指定するとstoreから内容を取得できる" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="310" y="2330" width="195" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--9" value="読み出し" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="250" y="2510" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--10" value="オフセットを引数で受け取り、log構造体が保持しているセグメントのbaseOffsetの中で該当のオフセットを含むセグメントをみつける&lt;br&gt;baseoffset = 0, 2, 4, 6&lt;br&gt;オフセット = 3&lt;br&gt;baseOffset = 2をもつセグメントが該当" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="67.5" y="2560" width="195" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--12" value="指定したオフセット(3)を引数にindexを読み出す&lt;br&gt;indexのReadメソッドの引数には&lt;br&gt;オフセット(3) - baseOffset(2) = 1&lt;br&gt;を指定し、storeのファイルサイズ(読み出し位置)を取得する&lt;br&gt;バイト列が返ってくるのでアンマーシャリングしレコード構造体に格納し返す" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="72.5" y="2730" width="195" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--14" value="指定したディレクトリの中からファイルを取得し、拡張子を除きparseIntしたものをbaseOffsetとして扱う" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                    <mxGeometry x="180" y="1740" width="180" height="90" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"testing"
@@ -39,7 +40,6 @@ func TestLog(t *testing.T) {
 c.Segment.MaxStoreBytes = 32と設定しているので、以降のテストで書き込んでいるレコードは、
 一つのセグメントに二つしか書き込めないことに注意してください。
 三つのレコードを書き込むと、二つのセグメントが作成されることになります。
--> どゆこと？？
 */
 
 // レコードの追加と読み書きのテスト
@@ -47,15 +47,42 @@ func testAppendRead(t *testing.T, log *Log) {
 	append := &api.Record{
 		Value: []byte("hello world"),
 	}
-	off, err := log.Append(append)
-	require.NoError(t, err)
-	require.Equal(t, uint64(0), off)
+	// off, err := log.Append(append)
+	// require.NoError(t, err)
+	// require.Equal(t, uint64(0), off)
 
-	// off = 0
-	read, err := log.Read(off)
-	require.NoError(t, err)
-	require.Equal(t, append.Value, read.Value)
+	// -- test --
+	for i := 0; i < 7; i++ {
+		fmt.Println(i+1, "回目")
+		off, err := log.Append(append)
+		require.NoError(t, err)
+		require.Equal(t, uint64(i), off)
+
+		fmt.Println("len(log.segments)", len(log.segments))
+		fmt.Println("log.activeSegment.baseOffset", log.activeSegment.baseOffset)
+		fmt.Println("log.activeSegment.nextOffset", log.activeSegment.nextOffset)
+		fmt.Println("log.activeSegment.store.size", log.activeSegment.store.size)
+		fmt.Println("log.activeSegment.index.size", log.activeSegment.index.size)
+		fmt.Println("log.activeSegment.index.mmap", len(log.activeSegment.index.mmap))
+
+		// off = 0
+		read, err := log.Read(off)
+		require.NoError(t, err)
+		require.Equal(t, append.Value, read.Value)
+	}
+
 	require.NoError(t, log.Close())
+
+	n, err := NewLog(log.Dir, log.Config)
+	require.NoError(t, err)
+
+	fmt.Println("Log Close And exec NewLog")
+	fmt.Println("len(log.segments)", len(n.segments))
+	fmt.Println("log.activeSegment.baseOffset", n.activeSegment.baseOffset)
+	fmt.Println("log.activeSegment.nextOffset", n.activeSegment.nextOffset)
+	fmt.Println("log.activeSegment.store.size", n.activeSegment.store.size)
+	fmt.Println("log.activeSegment.index.size", n.activeSegment.index.size)
+	fmt.Println("log.activeSegment.index.mmap", len(n.activeSegment.index.mmap))
 }
 
 // 範囲外エラーのテスト
@@ -78,6 +105,8 @@ func testInitExisting(t *testing.T, o *Log) {
 		require.NoError(t, err)
 	}
 	require.NoError(t, o.Close())
+
+	fmt.Println("o.segments", o.segments)
 
 	off, err := o.LowestOffset()
 	require.NoError(t, err)
@@ -104,6 +133,7 @@ func testReader(t *testing.T, log *Log) {
 	append := &api.Record{
 		Value: []byte("hello world"),
 	}
+	// +1される前のnextOffset
 	off, err := log.Append(append)
 	require.NoError(t, err)
 	require.Equal(t, uint64(0), off)
@@ -134,5 +164,9 @@ func testTruncate(t *testing.T, log *Log) {
 
 	_, err = log.Read(0)
 	require.Error(t, err)
+	_, err = log.Read(1)
+	require.Error(t, err)
+	_, err = log.Read(2)
+	require.NoError(t, err)
 	require.NoError(t, log.Close())
 }

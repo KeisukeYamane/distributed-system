@@ -4,6 +4,7 @@ package log
 import (
 	"bufio"
 	"encoding/binary"
+	"fmt"
 	"os"
 	"sync"
 )
@@ -43,6 +44,7 @@ func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	fmt.Println("store write byte", len(p))
 	// レコードを追加前にファイルのサイズを取得することで返り値をポシジョンとして使用できる
 	pos = s.size
 	// len(p)=5の場合、8byte分取るので[0 0 0 0 0 0 0 5]のスライス

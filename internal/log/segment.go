@@ -68,15 +68,24 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 	if s.index, err = newIndex(indexFile, c); err != nil {
 		return nil, err
 	}
+
 	if off, _, err := s.index.Read(-1); err != nil {
 		// errが返る場合はindexファイルの中身が何もない時
 		s.nextOffset = baseOffset
+		fmt.Println("----------")
+		fmt.Println("s.nextOffset = baseOffset", s.nextOffset)
+		fmt.Println("----------")
 	} else {
 		/*
 		 インデックスに少なくとも1つのエントリがある場合、
 		 次に書き込まれるレコードのオフセットはセグメントの最後のオフセットを使う必要がある
 		 ベースのオフセットと相対オフセットの和に1を加算して取得可能
 		*/
+		fmt.Println("----------")
+		fmt.Println("${baseOffset + uint64(off) + 1}", baseOffset)
+		fmt.Println("${baseOffset + uint64(off) + 1}", uint64(off))
+		fmt.Println("${baseOffset + uint64(off) + 1}", 1)
+		fmt.Println("----------")
 		s.nextOffset = baseOffset + uint64(off) + 1
 	}
 
@@ -92,7 +101,9 @@ func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 		recordはレコードの実態そのもの 一度マーシャリングを行い、byte列に変換する
 		value:"hello world" offset:16 先左がエンコーディングされる
 	*/
+	fmt.Println("before record", record)
 	p, err := proto.Marshal(record)
+	fmt.Println("after proto.Marshal(record)", p)
 	if err != nil {
 		return 0, err
 	}
@@ -103,8 +114,14 @@ func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 		return 0, err
 	}
 
+	fmt.Println("cur", cur)
+	fmt.Println("s.nextOffset (before append data)", s.nextOffset)
+	fmt.Println("s.baseOffset (before append data)", s.baseOffset)
+	fmt.Println("uint32(s.nextOffset-uint64(s.baseOffset))", uint32(s.nextOffset-uint64(s.baseOffset)))
+	fmt.Println("now store size(before append date in store)", pos)
+
 	if err = s.index.Write(
-		// インデックスのオフセットは、ベースのオフセットからの相対 (全然わからん)
+		// インデックスのオフセットは、ベースのオフセットからの相対
 		uint32(s.nextOffset-uint64(s.baseOffset)),
 		pos,
 	); err != nil {
