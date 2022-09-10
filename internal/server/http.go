@@ -100,8 +100,8 @@ func NewHTTPServer(addr string) *http.Server {
 	httpsrv := newHTTPServer()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", httpsrv.handleProduce).Methods("POST") // ログの書き込み
-	r.HandleFunc("/", httpsrv.handleConsume).Methods("GET")  // ログの読み出し
+	r.HandleFunc("/", httpsrv.handleProduce).Methods(http.MethodPost) // ログの書き込み
+	r.HandleFunc("/", httpsrv.handleConsume).Methods(http.MethodGet)  // ログの読み出し
 
 	return &http.Server{
 		Addr:    addr,

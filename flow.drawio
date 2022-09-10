@@ -471,7 +471,7 @@
                 <mxCell id="XmMbN-CJSVBsZEt9zfe--4" value="書き込み" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
                     <mxGeometry x="230" y="2130" width="60" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="XmMbN-CJSVBsZEt9zfe--5" value="Log構造体が保持する各セグメントからの最後のセグメントを取得し、そのnextOffsetを取得、し-1する&lt;br&gt;現在のactiveSegmentがmaxの場合、新たにセグメントを作成することで、それが新たしいactiveSgmentに設定される" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
+                <mxCell id="XmMbN-CJSVBsZEt9zfe--5" value="Log構造体が保持する各セグメントからの最後のセグメントを取得し、そのnextOffsetを取得し-1する&lt;br&gt;現在のactiveSegmentがmaxの場合、新たにセグメントを作成することで、それが新たしいactiveSgmentに設定される" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
                     <mxGeometry x="75" y="2170" width="195" height="130" as="geometry"/>
                 </mxCell>
                 <mxCell id="XmMbN-CJSVBsZEt9zfe--7" value="書き込む内容をマーシャリングし、storeに書き込む&lt;br&gt;storeは書き込む前の、ファイルサイズを返す" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="a6Zbn8eVY7nvMM-QkmC9-1">
